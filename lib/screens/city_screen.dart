@@ -15,7 +15,7 @@ class _CityScreenState extends State<CityScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/city_background.jpg'),
+            image: AssetImage('images/city_background.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -26,6 +26,9 @@ class _CityScreenState extends State<CityScreen> {
               Align(
                 alignment: Alignment.topLeft,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.grey.withOpacity(.10),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -48,6 +51,9 @@ class _CityScreenState extends State<CityScreen> {
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey.withOpacity(.10),
+                ),
                 onPressed: () {
                   Navigator.pop(context, cityName);
                 },

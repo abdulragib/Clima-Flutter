@@ -18,7 +18,7 @@ class _LocationScreenState extends State<LocationScreen> {
   String weatherIcon;
   String cityName;
   String weatherMessage;
-  var weatherData;
+
 
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _LocationScreenState extends State<LocationScreen> {
             image: AssetImage('images/location_background.jpg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(.10), BlendMode.dstATop),
+                Colors.black.withOpacity(.6), BlendMode.dstATop),
           ),
         ),
         constraints: BoxConstraints.expand(),
@@ -69,7 +69,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   //current location
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.white.withOpacity(.10),
+                      primary: Colors.transparent,
                     ),
                     onPressed: () async {
                       var weatherData = await weather.getLocationWeather();
@@ -84,7 +84,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   //city
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.white.withOpacity(.10),
+                      primary: Colors.transparent,
                     ),
                     onPressed: () async {
                       var typedName = await Navigator.push(
@@ -94,7 +94,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         ),
                       );
                       if (typedName != null) {
-                        weatherData = await weather.getCityWeather(typedName);
+                        var weatherData = await weather.getCityWeather(typedName);
                         updateUI(weatherData);
                       }
                     },
