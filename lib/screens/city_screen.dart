@@ -27,7 +27,7 @@ class _CityScreenState extends State<CityScreen> {
                 alignment: Alignment.topLeft,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.grey.withOpacity(.10),
+                    primary: Colors.white.withOpacity(.10),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -52,7 +52,7 @@ class _CityScreenState extends State<CityScreen> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.grey.withOpacity(.10),
+                  primary: Colors.white.withOpacity(.2),
                 ),
                 onPressed: () {
                   Navigator.pop(context, cityName);
