@@ -4,9 +4,9 @@ import 'package:clima/utilities/constants.dart';
 import '/services/weather.dart';
 import 'city_screen.dart';
 
-
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.locationWeather});
+
   final locationWeather;
 
   @override
@@ -20,7 +20,6 @@ class _LocationScreenState extends State<LocationScreen> {
   String weatherIcon;
   String cityName;
   String weatherMessage;
-
 
   @override
   void initState() {
@@ -47,28 +46,23 @@ class _LocationScreenState extends State<LocationScreen> {
     });
   }
 
-  Future<bool> _onBackPressed(){
+  Future<bool> _onBackPressed() {
     return showDialog(
-      context: context,
-      builder: (context)=> AlertDialog(
-        title: Text("Do you really want to exit the App"),
-        actions: [
-          ElevatedButton(
-            child: Text("No"),
-            onPressed: ()=> Navigator.pop(context,false),
-          ),
-
-          ElevatedButton(
-            child: Text("Yes"),
-            onPressed: ()=> exit(0),
-          ),
-        ],
-      )
-
-
-    );
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Do you really want to exit the App"),
+              actions: [
+                ElevatedButton(
+                  child: Text("No"),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                ElevatedButton(
+                  child: Text("Yes"),
+                  onPressed: () => exit(0),
+                ),
+              ],
+            ));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +115,8 @@ class _LocationScreenState extends State<LocationScreen> {
                           ),
                         );
                         if (typedName != null) {
-                          var weatherData = await weather.getCityWeather(typedName);
+                          var weatherData =
+                              await weather.getCityWeather(typedName);
                           updateUI(weatherData);
                         }
                       },
