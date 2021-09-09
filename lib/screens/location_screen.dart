@@ -20,6 +20,7 @@ class _LocationScreenState extends State<LocationScreen> {
   String weatherIcon;
   String cityName;
   String weatherMessage;
+  var typedName;
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class _LocationScreenState extends State<LocationScreen> {
         temperature = 0;
         weatherIcon = "Error";
         weatherMessage = "Unable to get weather data";
-        cityName = '';
+        cityName = '$typedName';
         return;
       }
       double temp = weatherData['main']['temp'];
@@ -108,7 +109,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         primary: Colors.transparent,
                       ),
                       onPressed: () async {
-                        var typedName = await Navigator.push(
+                         typedName = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CityScreen(),
