@@ -148,7 +148,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     ],
                   ),
                   SizedBox(
-                    height: 50.0,
+                    height: 90.0,
                   ),
                   Column(
                     children: [
