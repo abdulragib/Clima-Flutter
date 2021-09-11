@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 import '/services/weather.dart';
-import 'city_screen.dart';
 
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.locationWeather});
@@ -20,13 +19,14 @@ class _LocationScreenState extends State<LocationScreen> {
   String weatherIcon;
   String cityName;
   String weatherMessage;
-  var typedName;
+  var condition;
+  AssetImage _imageToShow;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     updateUI(widget.locationWeather);
+    _imageToShow = AssetImage('images/tree.jpg');
   }
 
   void updateUI(dynamic weatherData) {
@@ -35,15 +35,17 @@ class _LocationScreenState extends State<LocationScreen> {
         temperature = 0;
         weatherIcon = "Error";
         weatherMessage = "Unable to get weather data";
-        cityName = '$typedName';
+        cityName = '$cityName';
         return;
       }
-      double temp = weatherData['main']['temp'];
+      var temp = weatherData['main']['temp'];
       temperature = temp.toInt();
-      var condition = weatherData['weather'][0]['id'];
+      condition = weatherData['weather'][0]['id'];
       weatherIcon = weather.getWeatherIcon(condition);
       weatherMessage = weather.getMessage(temperature);
       cityName = weatherData['name'];
+
+      updateimage();
     });
   }
 
@@ -65,6 +67,24 @@ class _LocationScreenState extends State<LocationScreen> {
             ));
   }
 
+  void updateimage() {
+    setState(() {
+      if (condition < 300) {
+        _imageToShow = AssetImage('images/city_background.png');
+      } else if (condition < 400) {
+        _imageToShow = AssetImage('images/rain.jpg');
+      } else if (condition < 700) {
+        _imageToShow = AssetImage('images/snowfall.jpg');
+      } else if (condition == 800) {
+        _imageToShow = AssetImage('images/sunny.jpg');
+      } else if (condition <= 804) {
+        _imageToShow = AssetImage('images/tree.jpg');
+      } else {
+        _imageToShow = AssetImage('images/sky.jpg');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +93,7 @@ class _LocationScreenState extends State<LocationScreen> {
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('images/location_background.jpg'),
+              image: _imageToShow,
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
                   Colors.black.withOpacity(.6), BlendMode.dstATop),
@@ -81,80 +101,97 @@ class _LocationScreenState extends State<LocationScreen> {
           ),
           constraints: BoxConstraints.expand(),
           child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    //current location
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 10.0,
                       ),
-                      onPressed: () async {
-                        var weatherData = await weather.getLocationWeather();
-                        updateUI(weatherData);
-                      },
-                      child: Icon(
-                        Icons.near_me,
-                        size: 50.0,
-                      ),
-                    ),
-
-                    //city
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
-                      ),
-                      onPressed: () async {
-                         typedName = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CityScreen(),
+                      Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: TextField(
+                          style: TextStyle(
+                            color: Colors.black,
                           ),
-                        );
-                        if (typedName != null) {
-                          var weatherData =
-                              await weather.getCityWeather(typedName);
-                          updateUI(weatherData);
-                        }
-                      },
-                      child: Icon(
-                        Icons.location_city_rounded,
-                        size: 50.0,
+                          decoration: kTextFieldInputDecoration,
+                          onChanged: (value) {
+                            cityName = value;
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        '$temperature°',
-                        style: kTempTextStyle,
+                      SizedBox(
+                        height: 10.0,
                       ),
-                      Text(
-                        weatherIcon,
-                        style: kConditionTextStyle,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white.withOpacity(.1),
+                        ),
+                        onPressed: () async {
+                          if (cityName != null) {
+                            var weatherData =
+                                await weather.getCityWeather(cityName);
+                            updateUI(weatherData);
+                          }
+                        },
+                        child: Text(
+                          'Get Weather',
+                          style: kButtonTextStyle,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 15.0),
-                  child: Text(
-                    '$weatherMessage in $cityName',
-                    textAlign: TextAlign.right,
-                    style: kMessageTextStyle,
+                  SizedBox(
+                    height: 50.0,
                   ),
-                ),
-              ],
+                  Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 15.0),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              '$temperature°',
+                              style: kTempTextStyle,
+                            ),
+                            Text(
+                              weatherIcon,
+                              style: kConditionTextStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          right: 15.0,
+                        ),
+                        child: Text(
+                          '$weatherMessage in $cityName',
+                          textAlign: TextAlign.right,
+                          style: kMessageTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          var weatherData = await weather.getLocationWeather();
+          updateUI(weatherData);
+        },
+        child: const Icon(Icons.navigation, color: Colors.white),
+        backgroundColor: Colors.black,
       ),
     );
   }
